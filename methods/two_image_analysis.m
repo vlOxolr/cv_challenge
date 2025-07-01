@@ -48,7 +48,7 @@ function imgs = two_image_analysis(original_imgs)
     matchedPoints1 = matchedPoints1.Location;
     matchedPoints2 = matchedPoints2.Location;
     
-    tform = estgeotform2d(matchedPoints1,matchedPoints2,"similarity");
+    tform = estgeotform2d(matchedPoints1,matchedPoints2,"similarity"); %<---help hint
     tform
 
     outputView = imref2d(size(img1));
