@@ -1,14 +1,14 @@
 function [matched,imgs,highlights] = matched_two_images(original_imgs)
 % input:
-% original_imgs: list which contains two original images
+% original_imgs: cell which contains two original images
 % output:
 % matched: determine if 2 img matched or not (bool)
-% imgs: list which contains two corrected images
+% imgs: cell which contains two corrected images
 % highlights: img of difference highlights
     matched = true;
     imgs = orignal_imgs;
 
-    [height, width, ~] = size(original_imgs(1));
+    [height, width, ~] = size(original_imgs{1});
 
     % set white background
     output_image = uint8(255 * ones(height, width, 3));
