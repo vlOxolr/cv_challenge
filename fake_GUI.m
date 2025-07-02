@@ -41,8 +41,10 @@ pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
 %pth2 = "./datasets/userDatasets/Hangzhou/12_2015.jpg";
 
 original_imgs = readImg(pth1,pth2);
-imgs = two_image_analysis(original_imgs);
+[matched,imgs,highlights] = two_image_analysis(original_imgs);
 showImg(imgs);
+imshow(highlights);
+
 
 function original_imgs = readImg(pth1,pth2)
     

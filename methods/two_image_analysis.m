@@ -1,6 +1,10 @@
-function imgs = two_image_analysis(original_imgs)
+function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
 
-    visualizeMatchedPoint = true;
+    % set optional variable
+    p = inputParser;
+    addParameter(p,'visualizeMatchedPoint',false);
+    parse(p,varargin{:});
+    visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
 
     % check if original_img contains exactly 2 images
     if size(original_imgs,2) ~= 2
@@ -11,18 +15,9 @@ function imgs = two_image_analysis(original_imgs)
     img1 = original_imgs{1};
     img2 = original_imgs{2};
     
-    % convert to gray image
-    img1 = rgb2gray(img1);
-    img2 = rgb2gray(img2);
-
-    % histogram equalization
-    img1 = histeq(img1);
-    img2 = histeq(img2);
-
-    % histogram match
-    img2 = imhistmatch(img2, img1);
+    [img1,img2] = preprocessing(img1,img2);
     if visualizeMatchedPoint
-        showImg(img1,img2,"histogram match result");
+        showImg(img1,img2,"preprocessing result");
     end
 
     %img1 = imbinarize(img1,"adaptive");
@@ -86,6 +81,9 @@ function imgs = two_image_analysis(original_imgs)
  
     imgs = {corrected_img,original_imgs{2}};
 
+    matched = NaN;
+    highlights = highlight(corrected_img, original_imgs{2});
+
 end
 
 function Ieval = edge_detection(Igray)
@@ -138,4 +136,28 @@ function showImg(img1,img2,text)
     subplot(1,2,2);
     imshow(img2);
     title(text,'Image 2');
+end
+
+function hl = highlight(img1,img2)
+    [img1,img2] = preprocessing(img1,img2);
+    
+    diff = imabsdiff(img1, img2);
+
+    threshold = 150;
+    bmask = diff > threshold; % binar mask
+
+    hl = cat(3, ones(size(bmask)), ones(size(bmask)), zeros(size(bmask))).*bmask;
+end
+
+function [img1,img2] = preprocessing(img1,img2)
+    % convert to gray image
+    img1 = rgb2gray(img1);
+    img2 = rgb2gray(img2);
+
+    % histogram equalization
+    img1 = histeq(img1);
+    img2 = histeq(img2);
+
+    % histogram match
+    img2 = imhistmatch(img2, img1);
 end
