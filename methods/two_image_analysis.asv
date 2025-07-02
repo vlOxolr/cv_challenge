@@ -21,15 +21,7 @@ function imgs = two_image_analysis(original_imgs)
 
     % histogram match
     img2 = imhistmatch(img2, img1);
-    if visualizeMatchedPoint
-        showImg(img1,img2,"histogram match result");
-    end
 
-    %img1 = imbinarize(img1,"adaptive");
-    %img2 = imbinarize(img2,"adaptive");
-    %if visualizeMatchedPoint
-    %    showImg(img1,img2,"convert to binar image result");
-    %end
 
     % prefiltering
     %w=fir1(1,[0.2,0.3]);
@@ -38,20 +30,25 @@ function imgs = two_image_analysis(original_imgs)
     %img1 = convn(img1, kernel, 'same');
     %img2 = convn(img2, kernel, 'same');
 
-    %img1 = edge_detection(img1);
-    %img2 = edge_detection(img2);
-    %if visualizeMatchedPoint
-    %    showImg(img1,img2,"edge detection result");
-    %end
+    img1 = edge_detection(img1);
+    img2 = edge_detection(img2);
 
 
     % edge detection
-    %thres = 0.01;
-    %img1 = edge(img1, 'log', thres);
-    %img2 = edge(img2, 'log', thres);
-    %if visualizeMatchedPoint
-    %    showImg(img1,img2,"edge detection result");
-    %end
+    thres = 0.01;
+    img1 = edge(img1, 'log', thres);
+    img2 = edge(img2, 'log', thres);
+    if visualizeMatchedPoint
+        fig = figure;
+        subplot(1,2,1);
+        imshow(img1);
+        title('Image 1');
+        
+        subplot(1,2,2);
+        imshow(img2);
+        title('Image 2');
+        waitfor(fig);
+    end
 
     % feature extraction and matching
     points1 = detectSURFFeatures(img1,"MetricThreshold",500,"NumOctaves",3);
@@ -61,7 +58,7 @@ function imgs = two_image_analysis(original_imgs)
     [features2, validPoints2] = extractFeatures(img2, points2);
     
     indexPairs = matchFeatures(features1, features2);
-    %size(indexPairs)
+    size(indexPairs)
     
     matchedPoints1 = validPoints1(indexPairs(:, 1));
     matchedPoints2 = validPoints2(indexPairs(:, 2));
@@ -79,7 +76,7 @@ function imgs = two_image_analysis(original_imgs)
     end
     
     tform = estgeotform2d(matchedPoints1,matchedPoints2,"similarity","MaxNumTrials",5000); %<---help hint
-    %tform
+    tform
 
     outputView = imref2d(size(img1));
     corrected_img = imwarp(original_imgs{1},tform,"OutputView",outputView);
@@ -90,6 +87,11 @@ end
 
 function Ieval = edge_detection(Igray)
     I = im2double(Igray);
+
+    figure
+    image(I,'CDataMapping','scaled')
+    colormap('gray')
+    title('Original Grayscale Image')
 
     Gx = [-1 1];
     Gy = Gx';
@@ -127,15 +129,11 @@ function Ieval = edge_detection(Igray)
         Ieval(ii,:) = evalfis(edgeFIS,[(Ix(ii,:));(Iy(ii,:))]');
     end
 
+    figure
+    image(Ieval,'CDataMapping','scaled')
+    colormap('gray')
+    title('Edge Detection Using Fuzzy Logic')
+
 end
 
-function showImg(img1,img2,text)
-    figure;
-    subplot(1,2,1);
-    imshow(img1);
-    title(text,'Image 1');
-    
-    subplot(1,2,2);
-    imshow(img2);
-    title(text,'Image 2');
-end
+show

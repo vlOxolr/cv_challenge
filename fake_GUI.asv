@@ -19,10 +19,7 @@ pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
 %pth2 = "./datasets/givenDatasets/Dubai/12_2003.jpg";
 
 % high singular value sometimes -> big transition
-% could not find enough inliner error (2012_08,2021_06)
-%pth1 = "./datasets/givenDatasets/Frauenkirche/2019_03.jpg";
-%pth2 = "./datasets/givenDatasets/Frauenkirche/2020_03.jpg";
-% ok!
+% could not find enough inliner error (2021_06)
 %pth1 = "./datasets/givenDatasets/Frauenkirche/2012_08.jpg";
 %pth2 = "./datasets/givenDatasets/Frauenkirche/2019_06.jpg";
 
