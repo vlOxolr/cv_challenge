@@ -79,10 +79,10 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
  
     imgs = {corrected_img,original_imgs{2}};
     
-    if status == 0 && tform.A(3,3) >= 0.8
-        matched = true;
-    else
+    if status ~= 0 || tform.A(3,3) <= 0.8
         matched = false;
+    else
+        matched = true;
     end
 
     highlights = highlight(corrected_img, original_imgs{2});
