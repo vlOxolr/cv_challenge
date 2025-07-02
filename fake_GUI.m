@@ -7,8 +7,8 @@ addpath("./methods")
 %pth1 = "./datasets/givenDatasets/Brazilian Rainforest/12_1990.jpg";
 %pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_2005.jpg";
 % ok!
-pth1 = "./datasets/givenDatasets/Brazilian Rainforest/12_1995.jpg";
-pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
+%pth1 = "./datasets/givenDatasets/Brazilian Rainforest/12_1995.jpg";
+%pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
 
 % ok!
 %pth1 = "./datasets/givenDatasets/Columbia Glacier/12_2010.jpg";
@@ -20,8 +20,8 @@ pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
 
 % high singular value sometimes -> big transition
 % could not find enough inliner error (2012_08,2021_06)
-%pth1 = "./datasets/givenDatasets/Frauenkirche/2019_03.jpg";
-%pth2 = "./datasets/givenDatasets/Frauenkirche/2020_03.jpg";
+pth1 = "./datasets/givenDatasets/Frauenkirche/2012_08.jpg";
+pth2 = "./datasets/givenDatasets/Frauenkirche/2021_06.jpg";
 % ok!
 %pth1 = "./datasets/givenDatasets/Frauenkirche/2012_08.jpg";
 %pth2 = "./datasets/givenDatasets/Frauenkirche/2019_06.jpg";
@@ -42,8 +42,13 @@ pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
 
 original_imgs = readImg(pth1,pth2);
 [matched,imgs,highlights] = two_image_analysis(original_imgs);
-showImg(imgs);
-imshow(highlights);
+if matched
+    disp("images were matched.");
+    showImg(imgs);
+    %imshow(highlights);
+else
+    disp("images were not matched.");
+end
 
 
 function original_imgs = readImg(pth1,pth2)

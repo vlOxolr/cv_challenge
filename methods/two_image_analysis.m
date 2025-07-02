@@ -39,7 +39,6 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     %    showImg(img1,img2,"edge detection result");
     %end
 
-
     % edge detection
     %thres = 0.01;
     %img1 = edge(img1, 'log', thres);
@@ -74,14 +73,13 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     end
     
     [tform,~,status] = estgeotform2d(matchedPoints1,matchedPoints2,"similarity","MaxNumTrials",5000); %<---help hint
-    %tform
 
     outputView = imref2d(size(img1));
     corrected_img = imwarp(original_imgs{1},tform,"OutputView",outputView);
  
     imgs = {corrected_img,original_imgs{2}};
     
-    if status == 0
+    if status == 0 && tform.A(3,3) >= 0.8
         matched = true;
     else
         matched = false;
@@ -89,6 +87,7 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
 
     highlights = highlight(corrected_img, original_imgs{2});
 end
+
 
 function Ieval = edge_detection(Igray)
     I = im2double(Igray);
