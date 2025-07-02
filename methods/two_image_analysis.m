@@ -73,17 +73,21 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
         waitfor(fig);
     end
     
-    tform = estgeotform2d(matchedPoints1,matchedPoints2,"similarity","MaxNumTrials",5000); %<---help hint
+    [tform,~,status] = estgeotform2d(matchedPoints1,matchedPoints2,"similarity","MaxNumTrials",5000); %<---help hint
     %tform
 
     outputView = imref2d(size(img1));
     corrected_img = imwarp(original_imgs{1},tform,"OutputView",outputView);
  
     imgs = {corrected_img,original_imgs{2}};
+    
+    if status == 0
+        matched = true;
+    else
+        matched = false;
+    end
 
-    matched = NaN;
     highlights = highlight(corrected_img, original_imgs{2});
-
 end
 
 function Ieval = edge_detection(Igray)
