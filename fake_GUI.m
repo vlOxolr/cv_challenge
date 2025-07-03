@@ -70,13 +70,16 @@ pth2 = "./datasets/givenDatasets/Frauenkirche/2019_06.jpg";
 
 %% main part
 original_imgs = readImg(pth1,pth2);
-[matched,imgs,highlights] = two_image_analysis(original_imgs);
+[matched,imgs,highlights] = two_image_analysis(original_imgs,"visualizeMatchedPoint",true);
 if matched
     disp("images were matched.");
     showImg(imgs,highlights);
 else
     disp("images were not matched.");
+    showImg(imgs,highlights);
 end
 
 %% test part
 % edge detection
+original_imgs = readImg(pth1,pth2);
+edges = edge_detection(original_imgs);
