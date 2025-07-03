@@ -1,4 +1,4 @@
-function [tform,status] = SURFmatching(img1,img2,visualizeMatchedPoint)
+function [trafo,status] = SURFmatching(img1,img2,visualizeMatchedPoint)
 
     % feature extraction and matching
     points1 = detectSURFFeatures(img1,"MetricThreshold",500,"NumOctaves",3);
@@ -25,5 +25,5 @@ function [tform,status] = SURFmatching(img1,img2,visualizeMatchedPoint)
         waitfor(fig);
     end
     
-    [tform,~,status] = estgeotform2d(matchedPoints1,matchedPoints2,"similarity","MaxNumTrials",5000); %<---help hint
+    [trafo,~,status] = estgeotform2d(matchedPoints1,matchedPoints2,"similarity","MaxNumTrials",5000); %<---help hint
 end

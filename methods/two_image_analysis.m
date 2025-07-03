@@ -41,15 +41,12 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     %    showImg(img1,img2,"edge detection result");
     %end
 
-    [tform,status] = SURFmatching(img1,img2,visualizeMatchedPoint);
+    [trafo,status] = SURFmatching(img1,img2,visualizeMatchedPoint);
     
-    % transformation correction
-    outputView = imref2d(size(img1));
-    corrected_img = imwarp(original_imgs{1},tform,"OutputView",outputView);
- 
-    imgs = {corrected_img,original_imgs{2}};
-    
-    if status ~= 0 || tform.A(3,3) <= 0.8
+    corrected_img = trafo_correction(original_imgs{2},trafo);
+    imgs = {original_imgs{1},corrected_img};
+
+    if status ~= 0 || trafo.Scale <= 0.8
         matched = false;
     else
         matched = true;
