@@ -100,11 +100,17 @@ else
 end
 
 %% multiple image part
-%path = "./datasets/givenDatasets/Brazilian Rainforest/";
-%path = "./datasets/givenDatasets/Columbia Glacier/";
-%path = "./datasets/givenDatasets/Dubai/";
-%path = "./datasets/givenDatasets/Frauenkirche/";
-%path = "./datasets/givenDatasets/Kuwait/";
+% 0/8
+path = "./datasets/givenDatasets/Brazilian Rainforest/";
+% 11/11
+path = "./datasets/givenDatasets/Columbia Glacier/";
+% 8/8
+path = "./datasets/givenDatasets/Dubai/";
+% 7/10
+path = "./datasets/givenDatasets/Frauenkirche/";
+% 7/9
+path = "./datasets/givenDatasets/Kuwait/";
+% 6/8
 path = "./datasets/givenDatasets/Wiesn/";
 
 imgs = readmImg(path);
