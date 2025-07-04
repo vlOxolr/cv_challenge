@@ -6,8 +6,9 @@ clear;clc;
 %Registration(imgA, imgB, result_path);
 
 
-path = "E:/TUM课程/CV/cv_challenge/datasets/givenDatasets/Dubai/";
+path = "E:/TUM课程/CV/cv_challenge/datasets/givenDatasets/Wiesn/";
 imgs = readmImg(path);
+
 imgs = multiple_image_analysis(imgs);
 showmImg(imgs);
 
@@ -24,42 +25,32 @@ end
 %disp("✅ 所有图像已保存至: " + output_folder);
 
 % base function
-function imgs = read2Img(pth1,pth2)
-    
-    img1 = imread(pth1);
-    img2 = imread(pth2);
-    
-    imgs{1} = img1;
-    imgs{2} = img2;
-end
 
 function imgs = readmImg(path)
     image_files = dir(fullfile(path, '*.jpg'));
 
-    imgs = cell(1, length(image_files)); % Initialize cell array for images
+    % Parse dates from filenames
+    dates = zeros(length(image_files), 1);
     for i = 1:length(image_files)
-        file_name = image_files(i).name;
-        full_path = fullfile(path, file_name);
+        name = image_files(i).name;     
+        parts = split(name, {'_', '.'}); % parts = {'12','1990','jpg'}
+        month = str2double(parts{1});
+        year  = str2double(parts{2});
+        dates(i) = year * 100 + month;  % Use YYYYMM as sortable number
+    end
+
+    % Sort by date
+    [~, idx] = sort(dates);
+    image_files = image_files(idx);
+
+    % Load images
+    imgs = cell(1, length(image_files));
+    for i = 1:length(image_files)
+        full_path = fullfile(path, image_files(i).name);
         imgs{i} = imread(full_path);
     end
 end
 
-function show2Img(imgs,highlights)
-    img1 = imgs{1};
-    img2 = imgs{2};
-    
-    subplot(1,3,1);
-    imshow(img1);
-    title('Image 1');
-    
-    subplot(1,3,2);
-    imshow(img2);
-    title('Image 2');
-
-    subplot(1,3,3);
-    imshow(highlights);
-    title('highlights');
-end
 
 function showmImg(imgs)
     n = length(imgs);
