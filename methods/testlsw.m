@@ -6,10 +6,10 @@ clear;clc;
 %Registration(imgA, imgB, result_path);
 
 
-path = "E:/TUM课程/CV/cv_challenge/datasets/givenDatasets/Wiesn/";
+path = "E:/TUM课程/CV/cv_challenge/datasets/givenDatasets/Frauenkirche/";
 imgs = readmImg(path);
 
-imgs = multiple_image_analysis(imgs);
+imgs = multiple_image_analysis(imgs,"algorithm","surf");
 showmImg(imgs);
 
 output_folder = './results/multiple_image_output';
@@ -32,10 +32,10 @@ function imgs = readmImg(path)
     % Parse dates from filenames
     dates = zeros(length(image_files), 1);
     for i = 1:length(image_files)
-        name = image_files(i).name;     
-        parts = split(name, {'_', '.'}); % parts = {'12','1990','jpg'}
-        month = str2double(parts{1});
-        year  = str2double(parts{2});
+        name = image_files(i).name;
+        parts = split(name, {'_', '.'});  % YYYY MM.jpg → {'2020','11','jpg'}
+        year  = str2double(parts{1});
+        month = str2double(parts{2});
         dates(i) = year * 100 + month;  % Use YYYYMM as sortable number
     end
 

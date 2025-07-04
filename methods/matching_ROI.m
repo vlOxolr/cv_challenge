@@ -15,18 +15,31 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
         round(w/2)+1, round(h/2)+1, w - round(w/2), h - round(h/2)
     ];
 
+    bestNumMatches = 0;
+    bestTrafo = [];
+    bestRoiIndex = -1;
+
     for i = 1:4
-        roi = roiList4(i,:);
-        [trafo, status, numMatched] = try_match_once(img1, img2, algorithm, false, roi);
-        if status == 0
-            fprintf("Matched using 4-block ROI #%d with %d matches\n", i, numMatched);
-            if visualizeMatchedPoint
-               
-                try_match_once(img1, img2, algorithm, true, roi);
-            end
-            return;
-        end
+      roi = roiList4(i,:);
+      [t, s, n] = try_match_once(img1, img2, algorithm, false, roi);
+      if s == 0 && n > bestNumMatches
+          bestNumMatches = n;
+          bestTrafo = t;
+          bestRoiIndex = i;
+      end
     end
+
+   if bestNumMatches > 0
+      trafo = bestTrafo;
+      status = 0;
+      fprintf("Matched using 4-block ROI #%d with %d matches (best)\n", bestRoiIndex, bestNumMatches);
+      if visualizeMatchedPoint
+         roi = roiList4(bestRoiIndex,:);
+         try_match_once(img1, img2, algorithm, true, roi);
+      end
+      return;
+   end
+
 
     % Divided into 9 blocks matching
     stepW = round(w/3);
@@ -38,17 +51,31 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
         end
     end
 
+    bestNumMatches = 0;
+    bestTrafo = [];
+    bestRoiIndex = -1;
+
     for i = 1:9
-        roi = roiList9(i,:);
-        [trafo, status, numMatched] = try_match_once(img1, img2, algorithm, false, roi);
-        if status == 0
-            fprintf("Matched using 9-block ROI #%d with %d matches\n", i, numMatched);
-            if visualizeMatchedPoint
-                try_match_once(img1, img2, algorithm, true, roi);
-            end
-            return;
-        end
+       roi = roiList9(i,:);
+       [t, s, n] = try_match_once(img1, img2, algorithm, false, roi);
+       if s == 0 && n > bestNumMatches
+          bestNumMatches = n;
+          bestTrafo = t;
+          bestRoiIndex = i;
+       end
     end
+
+    if bestNumMatches > 0
+       trafo = bestTrafo;
+       status = 0;
+       fprintf("Matched using 9-block ROI #%d with %d matches (best)\n", bestRoiIndex, bestNumMatches);
+       if visualizeMatchedPoint
+         roi = roiList9(bestRoiIndex,:);
+         try_match_once(img1, img2, algorithm, true, roi);
+       end
+       return;
+    end
+
 
     % 最终都失败
     trafo = [];

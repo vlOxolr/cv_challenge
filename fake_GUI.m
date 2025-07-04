@@ -17,10 +17,10 @@ function imgs = readmImg(path)
     % Parse dates from filenames
     dates = zeros(length(image_files), 1);
     for i = 1:length(image_files)
-        name = image_files(i).name;     
-        parts = split(name, {'_', '.'}); 
-        month = str2double(parts{1});
-        year  = str2double(parts{2});
+        name = image_files(i).name;
+        parts = split(name, {'_', '.'});  % YYYY_ MM.jpg → {'2020','11','jpg'}
+        year  = str2double(parts{1});
+        month = str2double(parts{2});
         dates(i) = year * 100 + month;  % Use YYYYMM as sortable number
     end
 
