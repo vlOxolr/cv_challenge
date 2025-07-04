@@ -3,6 +3,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
     % global match
     [trafo, status, ~] = try_match_once(img1, img2, algorithm, visualizeMatchedPoint);
     if status == 0
+        fprintf("Global matching succeeded.\n");
         return;
     end
 
@@ -77,7 +78,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
     end
 
 
-    % 最终都失败
+    % all fail
     trafo = [];
     status = -1;
 end
