@@ -1,7 +1,7 @@
 function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algorithm)
 
     % global match
-    [trafo, status, ~] = try_match_once(img1, img2, algorithm, visualizeMatchedPoint);
+    [trafo, status, ~] = try_match_once(img1, img2, algorithm, visualizeMatchedPoint,[],50);
     if status == 0
         fprintf("Global matching succeeded.\n");
         return;
@@ -22,7 +22,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
 
     for i = 1:4
       roi = roiList4(i,:);
-      [t, s, n] = try_match_once(img1, img2, algorithm, false, roi);
+      [t, s, n] = try_match_once(img1, img2, algorithm, false, roi,100);
       if s == 0 && n > bestNumMatches
           bestNumMatches = n;
           bestTrafo = t;
@@ -36,7 +36,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
       fprintf("Matched using 4-block ROI #%d with %d matches (best)\n", bestRoiIndex, bestNumMatches);
       if visualizeMatchedPoint
          roi = roiList4(bestRoiIndex,:);
-         try_match_once(img1, img2, algorithm, true, roi);
+         try_match_once(img1, img2, algorithm, true, roi,100);
       end
       return;
    end
@@ -58,7 +58,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
 
     for i = 1:9
        roi = roiList9(i,:);
-       [t, s, n] = try_match_once(img1, img2, algorithm, false, roi);
+       [t, s, n] = try_match_once(img1, img2, algorithm, false, roi,100);
        if s == 0 && n > bestNumMatches
           bestNumMatches = n;
           bestTrafo = t;
@@ -72,7 +72,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
        fprintf("Matched using 9-block ROI #%d with %d matches (best)\n", bestRoiIndex, bestNumMatches);
        if visualizeMatchedPoint
          roi = roiList9(bestRoiIndex,:);
-         try_match_once(img1, img2, algorithm, true, roi);
+         try_match_once(img1, img2, algorithm, true, roi,100);
        end
        return;
     end
@@ -84,22 +84,25 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
 end
 
 
-function [trafo,status,numMatched] = try_match_once(img1, img2, algorithm, visualize, roi)
+function [trafo,status,numMatched] = try_match_once(img1, img2, algorithm, visualize, roi, matchThreshold)
     %  % feature extraction
     if algorithm == "surf"
-        if nargin < 5
-            points1 = detectSURFFeatures(img1, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6);
-            points2 = detectSURFFeatures(img2, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6);
+        if isempty(roi)
+    % No ROI, just full map detection
+           points1 = detectSURFFeatures(img1, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6);
+           points2 = detectSURFFeatures(img2, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6);
         else
-            points1 = detectSURFFeatures(img1, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6, "ROI", roi);
-            points2 = detectSURFFeatures(img2, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6, "ROI", roi);
+    
+           points1 = detectSURFFeatures(img1, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6, "ROI", roi);
+           points2 = detectSURFFeatures(img2, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6, "ROI", roi);
         end
+
     end
 
     [features1, validPoints1] = extractFeatures(img1, points1);
     [features2, validPoints2] = extractFeatures(img2, points2);
 
-    indexPairs = matchFeatures(features1, features2, 'Method','Exhaustive','Unique',true,'MatchThreshold',100);
+    indexPairs = matchFeatures(features1, features2, 'Method','Exhaustive','Unique',true,'MatchThreshold', matchThreshold);
     
     matchedPoints1 = validPoints1(indexPairs(:, 1));
     matchedPoints2 = validPoints2(indexPairs(:, 2));
