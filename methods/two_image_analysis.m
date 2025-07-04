@@ -3,7 +3,7 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     % set optional variable
     p = inputParser;
     addParameter(p,'visualizeMatchedPoint',false);
-    addParameter(p,'algorithm',"SURF");
+    addParameter(p,'algorithm',"surf");
     parse(p,varargin{:});
     visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
     algorithm = p.Results.algorithm;

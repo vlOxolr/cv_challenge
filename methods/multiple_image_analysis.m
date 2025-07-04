@@ -2,7 +2,7 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
     % set optional variable
     p = inputParser;
     addParameter(p,'visualizeMatchedPoint',false);
-    addParameter(p,'algorithm',"SURF");
+    addParameter(p,'algorithm',"surf");
     parse(p,varargin{:});
     visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
     algorithm = p.Results.algorithm;
@@ -21,7 +21,7 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
          cur_img = original_imgs{i};
         %ref_img = original_imgs{i-1};%image i-1 reference
         [proc_ref, proc_cur] = preprocessing(ref_img_for_transform, cur_img);
-        [trafo,status] = SURFmatching(proc_ref, proc_cur, false);
+        [trafo,status] = matching(proc_ref, proc_cur, visualizeMatchedPoint,algorithm);
         %gtrafo = double(trafo.A) * gtrafo;
         
         %outputView = imref2d(size(img1));

@@ -130,7 +130,7 @@ path = "./datasets/givenDatasets/Columbia Glacier/";
 
 imgs = readmImg(path);
 % variable: surf,harris,mineigen,brisk,fast,orb,mser,kaze
-imgs = multiple_image_analysis(imgs,"algorithm","harris");
+imgs = multiple_image_analysis(imgs,"algorithm","surf");
 showmImg(imgs);
 
 %% test part
