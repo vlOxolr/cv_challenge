@@ -2,6 +2,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
 
     % global match
     [trafo, status, ~] = try_match_once(img1, img2, algorithm, visualizeMatchedPoint,[],50);
+ 
     if status == 0
         fprintf("Global matching succeeded.\n");
         return;
@@ -29,7 +30,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
           bestRoiIndex = i;
       end
     end
-
+   
    if bestNumMatches > 0
       trafo = bestTrafo;
       status = 0;
@@ -92,7 +93,12 @@ function [trafo,status,numMatched] = try_match_once(img1, img2, algorithm, visua
            points1 = detectSURFFeatures(img1, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6);
            points2 = detectSURFFeatures(img2, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6);
         else
-    
+           [h, w] = size(img1);
+           x = roi(1); y = roi(2); width = roi(3); height = roi(4);
+           width = min(width, w - x + 1);
+           height = min(height, h - y + 1);
+           roi = [x, y, width, height];
+
            points1 = detectSURFFeatures(img1, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6, "ROI", roi);
            points2 = detectSURFFeatures(img2, "MetricThreshold",500,"NumOctaves",4,'NumScaleLevels',6, "ROI", roi);
         end
