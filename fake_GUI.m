@@ -43,7 +43,7 @@ function showmImg(imgs)
     n = length(imgs);
     
     for i = 1:n
-        subplot(1,n,i);
+        subplot(3,4,i);
         imshow(imgs{i});
         title(append('Image ',string(i)));
     end
@@ -60,8 +60,8 @@ end
 %pth2 = "./datasets/givenDatasets/Brazilian Rainforest/12_1985.jpg";
 
 % ok!
-%pth1 = "./datasets/givenDatasets/Columbia Glacier/12_2010.jpg";
-%pth2 = "./datasets/givenDatasets/Columbia Glacier/12_2016.jpg";
+pth1 = "./datasets/givenDatasets/Columbia Glacier/12_2010.jpg";
+pth2 = "./datasets/givenDatasets/Columbia Glacier/12_2016.jpg";
 
 % ok!
 %pth1 = "./datasets/givenDatasets/Dubai/12_1990.jpg";
@@ -72,8 +72,8 @@ end
 %pth1 = "./datasets/givenDatasets/Frauenkirche/2012_08.jpg";
 %pth2 = "./datasets/givenDatasets/Frauenkirche/2021_06.jpg";
 % ok!
-pth1 = "./datasets/givenDatasets/Frauenkirche/2012_08.jpg";
-pth2 = "./datasets/givenDatasets/Frauenkirche/2019_06.jpg";
+%pth1 = "./datasets/givenDatasets/Frauenkirche/2012_08.jpg";
+%pth2 = "./datasets/givenDatasets/Frauenkirche/2019_06.jpg";
 
 % problem solved by decreasing MetricThreshold
 % ok!
@@ -100,21 +100,22 @@ else
 end
 
 %% multiple image part
-% 0/8
-path = "./datasets/givenDatasets/Brazilian Rainforest/";
+% 0/8 (kaze:2/8)
+%path = "./datasets/givenDatasets/Brazilian Rainforest/";
 % 11/11
 path = "./datasets/givenDatasets/Columbia Glacier/";
 % 8/8
-path = "./datasets/givenDatasets/Dubai/";
+%path = "./datasets/givenDatasets/Dubai/";
 % 7/10
-path = "./datasets/givenDatasets/Frauenkirche/";
-% 7/9
-path = "./datasets/givenDatasets/Kuwait/";
+%path = "./datasets/givenDatasets/Frauenkirche/";
+% 7/9 (kaze:8/9)
+%path = "./datasets/givenDatasets/Kuwait/";
 % 6/8
-path = "./datasets/givenDatasets/Wiesn/";
+%path = "./datasets/givenDatasets/Wiesn/";
 
 imgs = readmImg(path);
-imgs = multiple_image_analysis(imgs);
+% variable: surf,harris,mineigen,brisk,fast,orb,mser,kaze
+imgs = multiple_image_analysis(imgs,"algorithm","harris");
 showmImg(imgs);
 
 %% test part

@@ -3,8 +3,10 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     % set optional variable
     p = inputParser;
     addParameter(p,'visualizeMatchedPoint',false);
+    addParameter(p,'algorithm',"SURF");
     parse(p,varargin{:});
     visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
+    algorithm = p.Results.algorithm;
 
     % check if original_img contains exactly 2 images
     if size(original_imgs,2) ~= 2
@@ -41,7 +43,7 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     %    showImg(img1,img2,"edge detection result");
     %end
 
-    [trafo,status] = SURFmatching(img1,img2,visualizeMatchedPoint);
+    [trafo,status] = matching(img1,img2,visualizeMatchedPoint,algorithm);
     
     corrected_img = trafo_correction(original_imgs{2},trafo);
     imgs = {original_imgs{1},corrected_img};

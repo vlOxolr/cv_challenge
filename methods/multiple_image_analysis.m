@@ -1,4 +1,12 @@
-function imgs = multiple_image_analysis(original_imgs)
+function imgs = multiple_image_analysis(original_imgs,varargin)
+    % set optional variable
+    p = inputParser;
+    addParameter(p,'visualizeMatchedPoint',false);
+    addParameter(p,'algorithm',"SURF");
+    parse(p,varargin{:});
+    visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
+    algorithm = p.Results.algorithm;
+
     % check if original_img contains exactly 2 images
     if length(original_imgs) < 2
         error('Input must contain at least 2 images.');
@@ -11,7 +19,7 @@ function imgs = multiple_image_analysis(original_imgs)
         img2 = original_imgs{i};
 
         [img1,img2] = preprocessing(img1,img2);
-        [trafo,status] = SURFmatching(img1,img2,false);
+        [trafo,status] = matching(img1,img2,visualizeMatchedPoint,algorithm);
         %gtrafo = double(trafo.A) * gtrafo;
 
         if status == 0
