@@ -14,13 +14,28 @@ end
 function imgs = readmImg(path)
     image_files = dir(fullfile(path, '*.jpg'));
 
-    imgs = cell(1, length(image_files)); % Initialize cell array for images
+    % Parse dates from filenames
+    dates = zeros(length(image_files), 1);
     for i = 1:length(image_files)
-        file_name = image_files(i).name;
-        full_path = fullfile(path, file_name);
+        name = image_files(i).name;     
+        parts = split(name, {'_', '.'}); 
+        month = str2double(parts{1});
+        year  = str2double(parts{2});
+        dates(i) = year * 100 + month;  % Use YYYYMM as sortable number
+    end
+
+    % Sort by date
+    [~, idx] = sort(dates);
+    image_files = image_files(idx);
+
+    % Load images
+    imgs = cell(1, length(image_files));
+    for i = 1:length(image_files)
+        full_path = fullfile(path, image_files(i).name);
         imgs{i} = imread(full_path);
     end
 end
+
 
 function show2Img(imgs,highlights)
     img1 = imgs{1};
