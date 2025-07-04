@@ -35,6 +35,7 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
             warning('Image %d could not be matched and was skipped.', i);
         end
     end
+end
 
     
 
