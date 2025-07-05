@@ -2,7 +2,7 @@ function [trafo, status] = matching_ROI(img1, img2, visualizeMatchedPoint, algor
 
     % global match
     [trafo, status, ~] = try_match_once(img1, img2, algorithm, visualizeMatchedPoint,[],50);
- 
+    
     if status == 0
         fprintf("Global matching succeeded.\n");
         return;
@@ -128,8 +128,8 @@ function [trafo,status,numMatched] = try_match_once(img1, img2, algorithm, visua
         showMatchedFeatures(img1, img2, matchedPoints1, matchedPoints2, 'montage');
         title('Matched features');
         waitfor(fig);
-        disp("Transformation matrix (tform.T):");
-        disp(trafo.T);
+        %disp("Transformation matrix (tform.T):");
+        %disp(trafo.T);
     end
 
     [trafo, ~, status] = estgeotform2d(matchedPoints1, matchedPoints2, ...
