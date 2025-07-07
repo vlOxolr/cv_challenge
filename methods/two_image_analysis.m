@@ -3,10 +3,8 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     % set optional variable
     p = inputParser;
     addParameter(p,'visualizeMatchedPoint',false);
-    addParameter(p,'algorithm',"surf");
     parse(p,varargin{:});
     visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
-    algorithm = p.Results.algorithm;
 
     % check if original_img contains exactly 2 images
     if size(original_imgs,2) ~= 2
@@ -43,18 +41,22 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     %    showImg(img1,img2,"edge detection result");
     %end
 
-    [trafo,status] = matching_ROI(img1,img2,visualizeMatchedPoint,algorithm);
-    
-    corrected_img = trafo_correction(original_imgs{2},trafo);
-    imgs = {original_imgs{1},corrected_img};
+    [trafo,status] = matching_loop(img1,img2,visualizeMatchedPoint);
 
-    if status ~= 0 || trafo.Scale <= 0.8
-        matched = false;
-    else
+    if status == 0
         matched = true;
-    end
 
-    highlights = highlight(corrected_img, original_imgs{2});
+        ref_img_for_fill = original_imgs{1};
+        corrected_img = trafo_correction(original_imgs{2},trafo);
+        corrected_img(corrected_img==0)=ref_img_for_fill(corrected_img==0);
+        imgs = {original_imgs{1},corrected_img};
+
+        highlights = highlight(corrected_img, original_imgs{2});
+    else
+        matched = false;
+        imgs = NaN;
+        highlights = NaN;
+    end
 end
 
 function showImg(img1,img2,text)

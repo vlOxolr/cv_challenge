@@ -2,10 +2,8 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
     % set optional variable
     p = inputParser;
     addParameter(p,'visualizeMatchedPoint',false);
-    addParameter(p,'algorithm',"surf");
     parse(p,varargin{:});
     visualizeMatchedPoint = p.Results.visualizeMatchedPoint;
-    algorithm = p.Results.algorithm;
 
     % check if original_img contains exactly 2 images
     if length(original_imgs) < 2
@@ -21,7 +19,7 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
         cur_img = original_imgs{i};
         %ref_img = original_imgs{i-1};      %image i-1 reference
         [proc_ref, proc_cur] = preprocessing(ref_img_for_transform, cur_img);
-        [trafo, status] = matching_ROI(proc_ref, proc_cur, visualizeMatchedPoint,algorithm);
+        [trafo, status] = matching_loop(proc_ref, proc_cur, visualizeMatchedPoint);
         %gtrafo = double(trafo.A) * gtrafo;
         
         %outputView = imref2d(size(img1));

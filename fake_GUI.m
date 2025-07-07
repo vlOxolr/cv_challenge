@@ -36,7 +36,6 @@ function imgs = readmImg(path)
     end
 end
 
-
 function show2Img(imgs,highlights)
     img1 = imgs{1};
     img2 = imgs{2};
@@ -105,35 +104,40 @@ pth2 = "./datasets/givenDatasets/Columbia Glacier/12_2016.jpg";
 %pth2 = "./datasets/userDatasets/Hangzhou/12_2015.jpg";
 
 original_imgs = read2Img(pth1,pth2);
-[matched,imgs,highlights] = two_image_analysis(original_imgs,"visualizeMatchedPoint",true);
+[matched,imgs,highlights] = two_image_analysis(original_imgs,"visualizeMatchedPoint",false);
 if matched
     disp("images were matched.");
     show2Img(imgs,highlights);
 else
     disp("images were not matched.");
-    show2Img(imgs,highlights);
 end
 
 %% multiple image part
+clc;clear;
+
 % 0/8
 %path = "./datasets/givenDatasets/Brazilian Rainforest/";
 % 11/11
 %path = "./datasets/givenDatasets/Columbia Glacier/";
 % 8/8
 %path = "./datasets/givenDatasets/Dubai/";
-% 8/10
-%path = "./datasets/givenDatasets/Frauenkirche/";
+% 8/10 (sometimes 9/10)
+path = "./datasets/givenDatasets/Frauenkirche/";
 % 9/9
 %path = "./datasets/givenDatasets/Kuwait/";
 % 8/8
-path = "./datasets/givenDatasets/Wiesn/";
+%path = "./datasets/givenDatasets/Wiesn/";
+
+% user Datasets
+% 5/8 (sometimes 8/8)
+%path = "./datasets/userDatasets/Guangzhou/";
+% 8/8
+%path = "./datasets/userDatasets/Hangzhou/";
+% 5/8
+%path = "./datasets/userDatasets/Hetian/";
+% 5/8
+%path = "./datasets/userDatasets/Wuhan/";
 
 imgs = readmImg(path);
-% only surf accessible now
-imgs = multiple_image_analysis(imgs,"visualizeMatchedPoint",false,"algorithm","surf");
+imgs = multiple_image_analysis(imgs);
 showmImg(imgs);
-
-%% test part
-% edge detection
-original_imgs = readImg(pth1,pth2);
-edges = edge_detection(original_imgs);
