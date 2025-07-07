@@ -12,16 +12,16 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
         error('Input must contain at least 2 images.');
     end
     
-    imgs{1} = original_imgs{1};
-    ref_img = original_imgs{1};%image 1 reference
+    imgs{1} = original_imgs{1}; % on transformation needed for the first img
+    ref_img = original_imgs{1}; % image 1 reference
     %gtrafo = [1,0,0;0,1,0;0,0,1]; % general transformation matrix
     for i = 2:size(original_imgs,2)
-         ref_img_for_transform = ref_img;     % For alignment direction (always 1st image)
-         ref_img_for_fill = ref_img;                % For filling (it's the last picture after the alignment)
-         cur_img = original_imgs{i};
-        %ref_img = original_imgs{i-1};%image i-1 reference
+        ref_img_for_transform = ref_img;    % For alignment direction (always 1st image)
+        ref_img_for_fill = ref_img;         % For filling (it's the last picture after the alignment)
+        cur_img = original_imgs{i};
+        %ref_img = original_imgs{i-1};      %image i-1 reference
         [proc_ref, proc_cur] = preprocessing(ref_img_for_transform, cur_img);
-        [trafo,status] = matching_ROI(proc_ref, proc_cur, visualizeMatchedPoint,algorithm);
+        [trafo, status] = matching_ROI(proc_ref, proc_cur, visualizeMatchedPoint,algorithm);
         %gtrafo = double(trafo.A) * gtrafo;
         
         %outputView = imref2d(size(img1));

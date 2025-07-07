@@ -43,7 +43,7 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     %    showImg(img1,img2,"edge detection result");
     %end
 
-    [trafo,status] = matching(img1,img2,visualizeMatchedPoint,algorithm);
+    [trafo,status] = matching_ROI(img1,img2,visualizeMatchedPoint,algorithm);
     
     corrected_img = trafo_correction(original_imgs{2},trafo);
     imgs = {original_imgs{1},corrected_img};

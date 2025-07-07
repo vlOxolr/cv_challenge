@@ -115,22 +115,22 @@ else
 end
 
 %% multiple image part
-% 0/8 (kaze:2/8)
+% 0/8
 %path = "./datasets/givenDatasets/Brazilian Rainforest/";
 % 11/11
-path = "./datasets/givenDatasets/Columbia Glacier/";
+%path = "./datasets/givenDatasets/Columbia Glacier/";
 % 8/8
 %path = "./datasets/givenDatasets/Dubai/";
-% 7/10
+% 8/10
 %path = "./datasets/givenDatasets/Frauenkirche/";
-% 7/9 (kaze:8/9)
+% 9/9
 %path = "./datasets/givenDatasets/Kuwait/";
-% 6/8
-%path = "./datasets/givenDatasets/Wiesn/";
+% 8/8
+path = "./datasets/givenDatasets/Wiesn/";
 
 imgs = readmImg(path);
-% variable: surf,harris,mineigen,brisk,fast,orb,mser,kaze
-imgs = multiple_image_analysis(imgs,"visualizeMatchedPoint",true,"algorithm","surf");
+% only surf accessible now
+imgs = multiple_image_analysis(imgs,"visualizeMatchedPoint",false,"algorithm","surf");
 showmImg(imgs);
 
 %% test part
