@@ -18,7 +18,7 @@ function [trafo, status] = matching_loop(img1, img2, doVisual)
     end
 
     % 9-block matching
-    bestMatch = block_matches(img1,img2,2,100,doVisual);
+    bestMatch = block_matches(img1,img2,3,100,doVisual);
     if bestMatch("num") > 0 && abs(bestMatch("scale")-1) < 0.1
        trafo = bestMatch("trafo");
        status = 0;
