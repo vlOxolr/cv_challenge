@@ -122,9 +122,9 @@ clc;clear;
 % 8/8
 %path = "./datasets/givenDatasets/Dubai/";
 % 8/10 (sometimes 9/10)
-path = "./datasets/givenDatasets/Frauenkirche/";
+%path = "./datasets/givenDatasets/Frauenkirche/";
 % 9/9
-%path = "./datasets/givenDatasets/Kuwait/";
+path = "./datasets/givenDatasets/Kuwait/";
 % 8/8
 %path = "./datasets/givenDatasets/Wiesn/";
 
