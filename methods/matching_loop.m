@@ -117,14 +117,33 @@ function [trafo,status,numMatched] = roi_match(img1, img2, roi, matchThreshold, 
     [trafo, ~, status] = estgeotform2d(matchedPoints1, matchedPoints2, ...
         'similar', 'Confidence', 90, 'MaxNumTrials', 2000, 'MaxDistance', 10);%'similar'kann change 'affine' have a try
 
+    %if doVisual
+        %fig = figure;
+        %showMatchedFeatures(img1, img2, matchedPoints1, matchedPoints2, 'montage');
+        %title('Matched features');
+        %waitfor(fig);
+        %disp("Transformation matrix (tform.T):");
+        %disp(trafo.T);
+    %end
     if doVisual
-        fig = figure;
-        showMatchedFeatures(img1, img2, matchedPoints1, matchedPoints2, 'montage');
-        title('Matched features');
-        waitfor(fig);
-        disp("Transformation matrix (tform.T):");
-        disp(trafo.T);
+      N = 30;  % only N paar match points to show
+
+      totalMatches = size(matchedPoints1, 1);
+      N = min(N, totalMatches); 
+
+      randIdx = randperm(totalMatches, N);  % random N points
+
+      showMatchedFeatures(img1, img2, ...
+        matchedPoints1(randIdx, :), matchedPoints2(randIdx, :), 'montage');
+
+      title(sprintf('Random %d Matched Features', N));
+      waitfor(gcf);
+
+      disp("Transformation matrix (tform.T):");
+      disp(trafo.T);
     end
+
+    
     
 end
 
