@@ -1,4 +1,4 @@
-function imgs = multiple_image_analysis(original_imgs,varargin)
+function imgs = multiple_image_analysis(original_imgs,fig,varargin)
     % set optional variable
     p = inputParser;
     addParameter(p,'visualizeMatchedPoint',false);
@@ -18,8 +18,11 @@ function imgs = multiple_image_analysis(original_imgs,varargin)
         ref_img_for_fill = ref_img;         % For filling (it's the last picture after the alignment)
         cur_img = original_imgs{i};
         %ref_img = original_imgs{i-1};      %image i-1 reference
+
+        %logStatus(fig,sprintf("process:%d/%d",i,length(original_imgs)-1));
+        loginfo = [i-1,length(original_imgs)-1];
         [proc_ref, proc_cur] = preprocessing(ref_img_for_transform, cur_img);
-        [trafo, status] = matching_loop(proc_ref, proc_cur, visualizeMatchedPoint);
+        [trafo, status] = matching_loop(proc_ref, proc_cur, fig, loginfo, true, visualizeMatchedPoint);
         %gtrafo = double(trafo.A) * gtrafo;
         
         %outputView = imref2d(size(img1));

@@ -1,10 +1,21 @@
-function [trafo, status] = matching_loop(img1, img2, doVisual)
+function [trafo, status] = matching_loop(img1, img2, fig, loginfo, doLoop, doVisual)
 
     % global match
     [trafo, status, ~] = roi_match(img1, img2, [], 50, doVisual);
     
     if status == 0 && abs(trafo.Scale-1) < 0.1
         fprintf("Global matching succeeded.\n");
+        logStatus(fig,sprintf("Global matching succeeded. (Process: %d/%d)",loginfo(1),loginfo(2)));
+        return;
+    else
+        % update status
+        status = -1;
+        trafo = NaN;
+    end
+
+    if ~doLoop
+        fprintf("Global matching failed.\n");
+        logStatus(fig,sprintf("Global matching failed. (Process: %d/%d)",loginfo(1),loginfo(2)));
         return;
     end
 
@@ -13,8 +24,16 @@ function [trafo, status] = matching_loop(img1, img2, doVisual)
     if bestMatch("num") > 0 && abs(bestMatch("scale")-1) < 0.1
         trafo = bestMatch("trafo");
         status = 0;
-        fprintf("Matched using 4-block ROI #%d with %d matches (best)\n", bestMatch("index"), bestMatch("num"));
+        fprintf("Best Match using 4-block ROI #%d with %d matches.\n", bestMatch("index"), bestMatch("num"));
+
+        logStatus(fig,sprintf("Best Match using 4-block ROI #%d with %d matches. (Process: %d/%d)", ...
+            bestMatch("index"), bestMatch("num"),loginfo(1),loginfo(2)));
+        %logStatus(fig,sprintf("Best Match using 4-block ROI #%d with %d matches", bestMatch("index"), bestMatch("num")));
         return;
+    else
+        % update status
+        status = -1;
+        trafo = NaN;
     end
 
     % 9-block matching
@@ -22,12 +41,17 @@ function [trafo, status] = matching_loop(img1, img2, doVisual)
     if bestMatch("num") > 0 && abs(bestMatch("scale")-1) < 0.1
        trafo = bestMatch("trafo");
        status = 0;
-       fprintf("Matched using 9-block ROI #%d with %d matches (best)\n", bestMatch("index"), bestMatch("num"));
+       fprintf("Best match using 9-block ROI #%d with %d matches.\n", bestMatch("index"), bestMatch("num"));
+       logStatus(fig,sprintf("Best match using 9-block ROI #%d with %d matches. (Process: %d/%d)", ...
+            bestMatch("index"), bestMatch("num"),loginfo(1),loginfo(2)));
+       %logStatus(fig,sprintf("Best match using 9-block ROI #%d with %d matches.", bestMatch("index"), bestMatch("num")));
        return;
     end
 
     % all fail
     fprintf("both 4- and 9-block Matching failed.\n");
+    logStatus(fig,sprintf("both 4- and 9-block Matching failed. (Process: %d/%d)",loginfo(1),loginfo(2)));
+    %logStatus(fig,"both 4- and 9-block Matching failed.");
     trafo = NaN;
     status = -1;
 end
