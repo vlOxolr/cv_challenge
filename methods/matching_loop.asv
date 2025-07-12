@@ -39,13 +39,12 @@ function [trafo, status] = matching_loop(img1, img2, fig, doLoop, doVisual)
        trafo = bestMatch("trafo");
        status = 0;
        fprintf("Best match using 9-block ROI #%d with %d matches.\n", bestMatch("index"), bestMatch("num"));
-       logStatus(fig,sprintf("Best match using 9-block ROI #%d with %d matches.", bestMatch("index"), bestMatch("num")));
+       logStatus(fig,sprintf("Best match using 9-block ROI #%d with %d matches.\n", bestMatch("index"), bestMatch("num"));
        return;
     end
 
     % all fail
     fprintf("both 4- and 9-block Matching failed.\n");
-    logStatus(fig,"both 4- and 9-block Matching failed.");
     trafo = NaN;
     status = -1;
 end

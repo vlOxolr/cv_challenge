@@ -1,0 +1,41 @@
+clc;clear;close all
+%%
+% 选择包含两张图片的文件夹
+folder = uigetdir();
+if folder == 0
+    error('你没有选择任何文件夹');
+end
+
+% 获取前两张图片
+imageFiles = dir(fullfile(folder, '*.jpg'));
+if numel(imageFiles) < 2
+    error('该文件夹下至少需要 2 张 .jpg 图片');
+end
+
+% 读取两张图片
+img1 = imread(fullfile(folder, imageFiles(1).name));
+img2 = imread(fullfile(folder, imageFiles(2).name));
+
+[matched,imgs,highlights] = two_image_analysis({img1, img2});
+
+%%
+img1_double = im2double(img1); % 将 uint8 转换为 double，并自动归一化到 [0, 1]
+img2_double = im2double(img2); % 将 uint8 转换为 double，并自动归一化到 [0, 1]
+
+highlights_norm = highlights; % 假设 highlights 已经归一化到 [0, 1]
+
+%% 2. 设置透明度权重 (alpha values)
+alpha1 = 0.4; % img1 的透明度权重
+alpha2 = 0.3; % img2 的透明度权重
+alpha_highlights = 0.5; % highlights 的透明度权重
+
+base_blend = (alpha1 / (alpha1 + alpha2)) * img1_double + ...
+             (alpha2 / (alpha1 + alpha2)) * img2_double; % 归一化混合，确保总和为1
+
+%% 4. 裁剪并显示结果
+% 混合后的图像像素值可能超出 [0, 1] 范围，需要裁剪。
+combined_image = imclamp(combined_image); % 将值裁剪到 [0, 1] 范围
+
+% 显示结果
+figure;
+imshow(combined_image);

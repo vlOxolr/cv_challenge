@@ -1,4 +1,4 @@
-function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
+function [matched,imgs,highlights] = two_image_analysis(original_imgs,fig,varargin)
 
     % set optional variable
     p = inputParser;
@@ -41,7 +41,7 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,varargin)
     %    showImg(img1,img2,"edge detection result");
     %end
 
-    [trafo,status] = matching_loop(img1,img2,visualizeMatchedPoint);
+    [trafo,status] = matching_loop(img1, img2, fig, false, visualizeMatchedPoint);
 
     if status == 0
         matched = true;
