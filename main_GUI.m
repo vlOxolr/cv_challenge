@@ -48,10 +48,8 @@ function main_GUI()
     statusPanel = uipanel(mainLayout);
     statusPanel.Layout.Row = 2;
     statusPanel.Layout.Column = 1;
-    statusLabel = uilabel(statusPanel, ...
-        'Text', 'Ready', ...
-        'HorizontalAlignment', 'left', ...
-        'Position', [10, 0, 1180, 20]);
+    statusLabel = uilabel(statusPanel, 'Text', 'Ready', ...
+        'HorizontalAlignment', 'left', 'Position', [10, 0, 1180, 20]);
 
     % Shared State
     appData.selectedFolder = fullfile(pwd,"datasets");
@@ -197,9 +195,12 @@ function setupTab1(tab, fig)
     s3.MajorTickLabels = {'0', '100'};
 
      % setup slider name
-    appData.slider_highlight_lbl = uilabel(tab, 'Text', 'Highlights', 'Position', [150 635 100 20]);
-    appData.slider_img1_lbl = uilabel(tab, 'Text', 'Image 1:', 'Position', [380 635 100 20]);  % dynamic modification follows
-    appData.slider_img2_lbl = uilabel(tab, 'Text', 'Image 2:', 'Position', [610 635 100 20]);  % dynamic modification follows
+    appData.slider_highlight_lbl = uilabel(tab, 'Text', 'Highlights',...
+        'Position', [150 635 100 20]);
+    appData.slider_img1_lbl = uilabel(tab, 'Text', 'Image 1:',...
+        'Position', [380 635 100 20]);  % dynamic modification follows
+    appData.slider_img2_lbl = uilabel(tab, 'Text', 'Image 2:',...
+        'Position', [610 635 100 20]);  % dynamic modification follows
 
     guidata(fig, appData);
 
@@ -243,7 +244,8 @@ function onMatchHighlights(fig)
         alpha1 = appData.alphaSliders(1).Value;
         alpha2 = appData.alphaSliders(2).Value;
         alpha3 = appData.alphaSliders(3).Value;
-        blended = blendThreeImages(appData.imgHighlight, appData.img1, appData.img2, [alpha1, alpha2, alpha3]);
+        blended = blendThreeImages(appData.imgHighlight,...
+            appData.img1, appData.img2, [alpha1, alpha2, alpha3]);
         h = imshow(blended, 'Parent', ax);
         appData.blendedImageHandle = h;
 
@@ -280,7 +282,8 @@ function onSliderUpdateBlend(fig)
     alpha2 = appData.alphaSliders(2).Value;
     alpha3 = appData.alphaSliders(3).Value;
 
-    blended = blendThreeImages(appData.imgHighlight, appData.img1, appData.img2, [alpha1, alpha2, alpha3]);
+    blended = blendThreeImages(appData.imgHighlight,...
+        appData.img1, appData.img2, [alpha1, alpha2, alpha3]);
 
     if isvalid(appData.blendedImageHandle)
         appData.blendedImageHandle.CData = blended;
@@ -426,7 +429,8 @@ function setupTab3(tab, fig)
     axis(ax, 'off');
 
     % Scroll bar (slider)
-    slider = uislider(tab, 'Position', [30 40 850 3], 'Limits', [1 2], 'Value', 1, 'MajorTicks', []);
+    slider = uislider(tab,...
+        'Position', [30 40 850 3], 'Limits', [1 2], 'Value', 1, 'MajorTicks', []);
     slider.ValueChangedFcn = @(s,e)onSliderChanged(fig, round(s.Value));
 
     % Frame label

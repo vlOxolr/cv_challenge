@@ -76,7 +76,7 @@ function hl = highlight(img1,img2)
     
     diff = imabsdiff(img1, img2);
 
-    threshold = 150;
+    threshold = 100;
     bmask = diff > threshold; % binar mask
 
     hl = cat(3, ones(size(bmask)), ones(size(bmask)), zeros(size(bmask))).*bmask;

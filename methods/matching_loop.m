@@ -166,9 +166,7 @@ function [trafo,status,numMatched] = roi_match(img1, img2, roi, matchThreshold, 
       disp("Transformation matrix (tform.T):");
       disp(trafo.T);
     end
-
-    
-    
+ 
 end
 
 function blocks = split(img, n)
