@@ -41,7 +41,8 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,fig,vararg
     %    showImg(img1,img2,"edge detection result");
     %end
 
-    [trafo,status] = matching_loop(img1, img2, fig, false, visualizeMatchedPoint);
+    loginfo = [1,1];
+    [trafo,status] = matching_loop(img1, img2, fig, loginfo, false, visualizeMatchedPoint);
 
     if status == 0
         matched = true;
