@@ -51,7 +51,7 @@ function [matched,imgs,highlights] = two_image_analysis(original_imgs,fig,vararg
         corrected_img(corrected_img==0)=ref_img_for_fill(corrected_img==0);
         imgs = {original_imgs{1},corrected_img};
 
-        highlights = highlight(corrected_img, original_imgs{2});
+        highlights = highlight(original_imgs{1},corrected_img);
     else
         matched = false;
         imgs = NaN;

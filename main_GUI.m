@@ -1,6 +1,6 @@
 % Main GUI File: image_analysis_gui.m
 
-function image_analysis_gui()
+function main_GUI()
     addpath("./methods")
     % Create Main Figure
     fig = uifigure('Name','Across Time and Space','Position',[100 100 1210 750]);
