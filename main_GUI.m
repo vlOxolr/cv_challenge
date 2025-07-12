@@ -49,7 +49,7 @@ function main_GUI()
     statusPanel.Layout.Row = 2;
     statusPanel.Layout.Column = 1;
     statusLabel = uilabel(statusPanel, 'Text', 'Ready', ...
-        'HorizontalAlignment', 'left', 'Position', [10, 0, 1180, 20]);
+        'HorizontalAlignment', 'left', 'Position', [10, 0, 1180, 30]);
 
     % Shared State
     appData.selectedFolder = fullfile(pwd,"datasets");
@@ -172,9 +172,9 @@ function setupTab1(tab, fig)
         'ButtonPushedFcn',@(btn,event)onMatchHighlights(fig));
    
     % Transparency sliders
-    s1 = uislider(tab,'Position',[150 615 200 3],'Limits',[0 1],'Value',1);
-    s2 = uislider(tab,'Position',[380 615 200 3],'Limits',[0 1],'Value',1);
-    s3 = uislider(tab,'Position',[610 615 200 3],'Limits',[0 1],'Value',1);
+    s1 = uislider(tab,'Position',[150 615 200 3],'Limits',[0 1],'Value',0.4);
+    s2 = uislider(tab,'Position',[420 615 200 3],'Limits',[0 1],'Value',0.5);
+    %s3 = uislider(tab,'Position',[610 615 200 3],'Limits',[0 1],'Value',1);
 
     % Axes for image display
     ax = uiaxes(tab,'Position',[30 30 850 560]);
@@ -183,24 +183,25 @@ function setupTab1(tab, fig)
     % Store references
     appData = guidata(fig);
     appData.imgAxes = ax;
-    appData.alphaSliders = [s1 s2 s3];
+    %appData.alphaSliders = [s1 s2 s3];
+    appData.alphaSliders = [s1 s2];
     
 
     % setup ticks (transparent: 0-100%)
     s1.MajorTicks = [0 1];
     s1.MajorTickLabels = {'0', '100'};
     s2.MajorTicks = [0 1];
-    s2.MajorTickLabels = {'0', '100'};
-    s3.MajorTicks = [0 1];
-    s3.MajorTickLabels = {'0', '100'};
+    s2.MajorTickLabels = {'Image 1', 'Image 2'};
+    %s3.MajorTicks = [0 1];
+    %s3.MajorTickLabels = {'0', '100'};
 
-     % setup slider name
+    % setup slider name
     appData.slider_highlight_lbl = uilabel(tab, 'Text', 'Highlights',...
         'Position', [150 635 100 20]);
-    appData.slider_img1_lbl = uilabel(tab, 'Text', 'Image 1:',...
-        'Position', [380 635 100 20]);  % dynamic modification follows
-    appData.slider_img2_lbl = uilabel(tab, 'Text', 'Image 2:',...
-        'Position', [610 635 100 20]);  % dynamic modification follows
+    appData.slider_img1_lbl = uilabel(tab, 'Text', 'Transparent',...
+        'Position', [420 635 100 20]);  % dynamic modification follows
+    %appData.slider_img2_lbl = uilabel(tab, 'Text', 'Image 2:',...
+    %    'Position', [610 635 100 20]);  % dynamic modification follows
 
     guidata(fig, appData);
 
@@ -243,14 +244,14 @@ function onMatchHighlights(fig)
         % Initial blend
         alpha1 = appData.alphaSliders(1).Value;
         alpha2 = appData.alphaSliders(2).Value;
-        alpha3 = appData.alphaSliders(3).Value;
+        %alpha3 = appData.alphaSliders(3).Value;
         blended = blendThreeImages(appData.imgHighlight,...
-            appData.img1, appData.img2, [alpha1, alpha2, alpha3]);
+            appData.img1, appData.img2, [alpha1, 1-alpha2, alpha2]);
         h = imshow(blended, 'Parent', ax);
         appData.blendedImageHandle = h;
 
         % Setup slider callbacks
-        for k = 1:3
+        for k = 1:2
             appData.alphaSliders(k).ValueChangedFcn = @(s,e)onSliderUpdateBlend(fig);
         end
 
@@ -262,8 +263,10 @@ function onMatchHighlights(fig)
             if length(nodes) >= 2
                 name1 = getFileName(nodes(end-1).NodeData);
                 name2 = getFileName(nodes(end).NodeData);
-                appData.slider_img1_lbl.Text = "Image 1: " + name1;
-                appData.slider_img2_lbl.Text = "Image 2: " + name2;
+
+                appData.alphaSliders(2).MajorTickLabels = [name1,name2];
+                %appData.slider_img1_lbl.Text = "Image 1: " + name1;
+                %appData.slider_img2_lbl.Text = "Image 2: " + name2;
             end
         end
     else
@@ -280,10 +283,10 @@ function onSliderUpdateBlend(fig)
 
     alpha1 = appData.alphaSliders(1).Value;
     alpha2 = appData.alphaSliders(2).Value;
-    alpha3 = appData.alphaSliders(3).Value;
+    %alpha3 = appData.alphaSliders(3).Value;
 
     blended = blendThreeImages(appData.imgHighlight,...
-        appData.img1, appData.img2, [alpha1, alpha2, alpha3]);
+        appData.img1, appData.img2, [alpha1, 1-alpha2, alpha2]);
 
     if isvalid(appData.blendedImageHandle)
         appData.blendedImageHandle.CData = blended;
