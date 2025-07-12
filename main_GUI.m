@@ -304,8 +304,14 @@ function output = blendThreeImages(imgA, imgB, imgC, alphas)
     end
     w = alphas / sum(alphas);
 
+    % remove black pixel in highlight
+    yellowMask = A(:,:,1) ~= 0;
+    yellowMask = repmat(yellowMask, 1, 1, 3);
+    alpha_bias = 1/(w(2)+w(3));
+    biasMask = yellowMask + alpha_bias*~yellowMask;
+
     % Weighted blending
-    output = w(1)*A + w(2)*B + w(3)*C;
+    output = w(1)*A.*yellowMask + w(2)*B.*biasMask + w(3)*C.*biasMask;
 
     % Convert back to uint8
     output = im2uint8(output);
