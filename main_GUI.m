@@ -132,34 +132,47 @@ function isImg = isImage(filename)
     isImg = any(strcmpi(ext,{'.jpg','.jpeg','.png','.bmp'}));
 end
 
-function onNodeSelected(src,event,fig)
+function onNodeSelected(src, event, fig)
     appData = guidata(fig);
     selectedNode = event.SelectedNodes;
     if isempty(selectedNode)
         return;
     end
+
     path = selectedNode.NodeData;
+
+    
     if isfolder(path)
-        files = dir(fullfile(path,'*.*'));
-        files = files(~startsWith({files.name}, '.'));
-        images = {};
-        for i = 1:length(files)
-            if isImage(files(i).name)
-                images{end+1} = imread(fullfile(path, files(i).name));
-            end
+        try
+            images = readmImg(path);  
+            appData.selectedImages = images;
+        catch
+            uialert(fig, 'Failed to read or sort images in folder.', 'Read Error');
+            return;
         end
-        appData.selectedImages = images;
+
+    
     else
         selected = event.SelectedNodes;
+
+        
         if length(selected) >= 2 && appData.activeTab.Title ~= "Time Lapse"
             selected = selected(end-1:end);
         end
+
+       
+        paths = arrayfun(@(n) n.NodeData, selected, 'UniformOutput', false);
+
+        % Sort Path (attempts to extract timing information from filenames)
+        [sortedPaths, ~] = trySortPathsByDate(paths);
+
+        
         appData.selectedImages = {};
-        for i = 1:length(selected)
-            node = selected(i);
-            appData.selectedImages{end+1} = imread(node.NodeData);
+        for i = 1:length(sortedPaths)
+            appData.selectedImages{end+1} = imread(sortedPaths{i});
         end
     end
+
     guidata(fig, appData);
 end
 
@@ -477,14 +490,19 @@ function onMatchTimelapse(fig)
         slider.Limits = [1, length(resultImgs)];
         slider.MajorTicks = 1:length(resultImgs);
         slider.Value = 1;
-        % get image name for ticks
+        %  Generate tick labels with sorted paths
         if isfield(appData, "tree") && isprop(appData.tree, "SelectedNodes")
-            nodes = appData.tree.SelectedNodes;
-            if length(nodes) >= 1
-                names = getFileNameList(nodes);
-                slider.MajorTickLabels = names; 
-            end
+          selected = appData.tree.SelectedNodes;
+          paths = arrayfun(@(n) n.NodeData, selected, 'UniformOutput', false);
+          [sortedPaths, ~] = trySortPathsByDate(paths);  
+
+          names = strings(1, length(sortedPaths));
+          for i = 1:length(sortedPaths)
+             [~, names(i), ~] = fileparts(sortedPaths{i});
+          end
+          slider.MajorTickLabels = names;
         end
+
 
         % setup label
         label = appData.labelTimeline;
@@ -564,3 +582,48 @@ function names = getFileNameList(nodes)
     end
 end
 
+%% Folder reading and sorting by time
+function imgs = readmImg(path)   
+    image_files = dir(fullfile(path, '*.jpg'));
+
+    % Parse dates from filenames
+    dates = zeros(length(image_files), 1);
+    for i = 1:length(image_files)
+        name = image_files(i).name;
+        parts = split(name, {'_', '.'});  % YYYY_ MM.jpg → {'2020','11','jpg'}
+        year  = str2double(parts{1});
+        month = str2double(parts{2});
+        dates(i) = year * 100 + month;  % Use YYYYMM as sortable number
+    end
+
+    % Sort by date
+    [~, idx] = sort(dates);
+    image_files = image_files(idx);
+
+    % Load images
+    imgs = cell(1, length(image_files));
+    for i = 1:length(image_files)
+        full_path = fullfile(path, image_files(i).name);
+        imgs{i} = imread(full_path);
+    end
+end
+
+%% Multi-select image path sorting
+function [sortedPaths, success] = trySortPathsByDate(paths) 
+    try
+        dates = zeros(length(paths),1);
+        for i = 1:length(paths)
+            [~, name, ~] = fileparts(paths{i});
+            parts = split(name, {'_', '.'}); % YYYY_ MM.jpg → {'2020','11','jpg'}
+            year = str2double(parts{1});
+            month = str2double(parts{2});
+            dates(i) = year * 100 + month;
+        end
+        [~, idx] = sort(dates);
+        sortedPaths = paths(idx);
+        success = true;
+    catch
+        sortedPaths = paths;  % Return to original order if sorting fails
+        success = false;
+    end
+end
