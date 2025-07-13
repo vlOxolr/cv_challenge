@@ -72,13 +72,13 @@ function showImg(img1,img2,text)
 end
 
 function hl = highlight(img1,img2)
+    %[img1,img2] = preprocessing(img1,img2);
+    img1 = sum(img1,3);
+    img2 = sum(img2,3);
     
-    diff_r = imabsdiff(img1(:,:,1), img2(:,:,1));
-    diff_g = imabsdiff(img1(:,:,2), img2(:,:,2));
-    diff_b = imabsdiff(img1(:,:,3), img2(:,:,3));
-    diff = diff_r + diff_g + diff_b;
+    diff = imabsdiff(img1, img2);
 
-    threshold = 80;
+    threshold = 150;
     bmask = diff > threshold; % binar mask
 
     hl = cat(3, ones(size(bmask)), ones(size(bmask)), zeros(size(bmask))).*bmask;

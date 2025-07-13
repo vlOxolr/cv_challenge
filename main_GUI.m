@@ -1,5 +1,3 @@
-% Main GUI File: image_analysis_gui.m
-
 function main_GUI()
     addpath("./methods")
     % Create Main Figure

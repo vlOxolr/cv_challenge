@@ -69,6 +69,6 @@ end
 function enterMainApp(startupFig)
     main_GUI();          
     drawnow;              
-    pause(0.2);           
+    %pause(0.2);           
     close(startupFig);    
 end
