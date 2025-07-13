@@ -21,8 +21,8 @@ Chosen folder
 |   ├── image2.jpg
 |   ├── :
 │   └── imagen.jpg
-│
-└── sub_folder2
+│		:
+└── sub_foldern
     ├── image1.jpg
     ├── image2.jpg
     ├── :
