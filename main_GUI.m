@@ -144,8 +144,30 @@ function onNodeSelected(src, event, fig)
     
     if isfolder(path)
         try
-            images = readmImg(path);  
-            appData.selectedImages = images;
+        image_files = dir(fullfile(path, '*.jpg'));
+        % Parse dates from filenames
+        dates = zeros(length(image_files), 1);
+        for i = 1:length(image_files)
+            name = image_files(i).name;
+            parts = split(name, {'_', '.'});
+            year  = str2double(parts{1});
+            month = str2double(parts{2});
+            dates(i) = year * 100 + month;
+        end
+        [~, idx] = sort(dates);
+        image_files = image_files(idx);
+
+        % Load images and store their paths
+        images = cell(1, length(image_files));
+        paths = cell(1, length(image_files));
+        for i = 1:length(image_files)
+            full_path = fullfile(path, image_files(i).name);
+            images{i} = imread(full_path);
+            paths{i} = full_path;
+        end
+
+        appData.selectedImages = images;
+        appData.selectedImagePaths = paths;
         catch
             uialert(fig, 'Failed to read or sort images in folder.', 'Read Error');
             return;
@@ -167,10 +189,15 @@ function onNodeSelected(src, event, fig)
         [sortedPaths, ~] = trySortPathsByDate(paths);
 
         
-        appData.selectedImages = {};
+        images = cell(1, length(sortedPaths));
+        paths = cell(1, length(sortedPaths));
         for i = 1:length(sortedPaths)
-            appData.selectedImages{end+1} = imread(sortedPaths{i});
+          images{i} = imread(sortedPaths{i});
+         paths{i} = sortedPaths{i};
         end
+        appData.selectedImages = images;
+        appData.selectedImagePaths = paths; 
+
     end
 
     guidata(fig, appData);
@@ -491,17 +518,14 @@ function onMatchTimelapse(fig)
         slider.MajorTicks = 1:length(resultImgs);
         slider.Value = 1;
         %  Generate tick labels with sorted paths
-        if isfield(appData, "tree") && isprop(appData.tree, "SelectedNodes")
-          selected = appData.tree.SelectedNodes;
-          paths = arrayfun(@(n) n.NodeData, selected, 'UniformOutput', false);
-          [sortedPaths, ~] = trySortPathsByDate(paths);  
-
-          names = strings(1, length(sortedPaths));
-          for i = 1:length(sortedPaths)
-             [~, names(i), ~] = fileparts(sortedPaths{i});
-          end
-          slider.MajorTickLabels = names;
+        if isfield(appData, "selectedImagePaths") && ~isempty(appData.selectedImagePaths)
+         names = strings(1, length(appData.selectedImagePaths));
+         for i = 1:length(appData.selectedImagePaths)
+            [~, names(i), ~] = fileparts(appData.selectedImagePaths{i});
+         end
+         slider.MajorTickLabels = names;
         end
+
 
 
         % setup label
