@@ -18,10 +18,10 @@ Chosen folder
 │
 ├── sub_folder1
 │   ├── image1.jpg
-|   ├── image2.jpg
-|   ├── :
+│   ├── image2.jpg
+│   ├── :
 │   └── imagen.jpg
-│		:
+│	:
 └── sub_foldern
     ├── image1.jpg
     ├── image2.jpg
