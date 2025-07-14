@@ -64,11 +64,35 @@ function startGUI()
     'Position', [535 350 140 50], ...
     'Tooltip', 'Click to launch the application', ...
     'ButtonPushedFcn', @(btn,event)enterMainApp(fig));
+
+    %% Add QR Code Image 
+    qrImg = imread('githubQRcode.png');  
+    qrAxes = uiaxes(fig, ...
+        'Position', [1030 30 150 150], ...  
+        'XColor', 'none', 'YColor', 'none', ...
+        'Box', 'off');
+    axis(qrAxes, 'off');
+    image(qrAxes, qrImg);
+    qrAxes.XLim = [0 size(qrImg, 2)];
+    qrAxes.YLim = [0 size(qrImg, 1)];
+    uistack(qrAxes, 'top');
+
+    %% Add Description for QR Code 
+    uilabel(fig, ...
+        'Text', 'Scan to visit our GitHub page', ...
+        'FontSize', 14, ...
+        'FontWeight', 'bold', ... 
+        'FontColor', [1 0.5 0], ...
+        'HorizontalAlignment', 'center', ...
+        'Position', [1000 15 210 20]);
 end
 
 function enterMainApp(startupFig)
+    main_GUI();
+    pause(0.2); 
+    drawnow;  
     close(startupFig);    
-    main_GUI();          
-    drawnow;              
-    %pause(0.2);           
+              
+                
+             
 end
