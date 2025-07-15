@@ -11,7 +11,7 @@ Computer Vision Challenge
 
 ## 2. Quick Start
 - Run main.m to open the GUI, then press enter to startup
-- Choose Folder: Default folder was './dataset'. press select -> Choose Folder to change it. Make sure that chosen folder are in following structure:
+- Choose Folder: Default folder was './dataset'. press select -> Choose Folder to change it. Following is the recommended structure of chosen folder:
 
 ```
 Chosen folder
