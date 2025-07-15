@@ -29,7 +29,7 @@ Chosen folder
     └── imagen.jpg
 ```
 - Visualization Methods: There are 3 different method to show the image matching results - Highlights, Difference Curtain and Time Lapse. Both highlights & difference curtain match 2 images. Time Lapse matches a series of images.
-- **Image Selection**: Select image by clicking the image in the left file panel. Hold Ctrl and click to select multiple images. (**Note**: If you select more than 2 images for highlights & difference curtain, only the last chosen 2 images will be matched. It will also happen, if you select multiple images in highlights & difference curtain and then turn to time lapse.)
+- **Image Selection**: Select image by clicking the image in the left file panel. Hold Ctrl and click to select multiple images. If you select a folder which contains images, all the images in the folder will be delivered for matching. (**Note**: If you select more than 2 images for highlights & difference curtain, only the last chosen 2 images will be delivered. It will also happen, if you select multiple images in highlights & difference curtain and then turn to time lapse.)
 - Press 'match' to start matching
 - Use slider in each visualization method to compare and make the difference more obviously.
 
